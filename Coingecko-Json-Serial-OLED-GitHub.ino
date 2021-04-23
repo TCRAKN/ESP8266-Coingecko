@@ -1,14 +1,37 @@
 /*------------------------------------------------------------------------------
-  14-22 April 2021
+  14-23 April 2021
   Author: Abdul-Khaliq Nathekar
   Platforms: ESP8266
   Language: C++/Arduino
-  File: Coingecko-Json-Serial-OLED.ino
+  File: Coingecko-Json-Serial-OLED-GitHub.ino
   ------------------------------------------------------------------------------
   Description:
   Code demonstrating parsing json data from Coingecko.com API to fetch
   the current price of various crypto coins.
+  ------------------------------------------------------------------------------
+  Change log:
+
+  V1.00
+  First Release
+  1. Secure-connect and get data from Coingecko.com API
+  2. Parse Json test text string and send to serial monitor
+
+  V1.01
+  1. Incoporate Time & Date retrieval from NTP server
+
+  V2.00
+  1. Added 128x64 I2C OLED
+  2. Send required data to OLED
+
+  V2.01
+  1. Format placement of data along with appropriate typeface
+  2. Adde price change in 24hrs
+
+  V2.02
+  1. Centre price on OLED
+  2. Removed PageBuffers for U8g2 printing
   ------------------------------------------------------------------------------*/
+
 
 #include <ESP8266WiFi.h>
 #include <ESP8266HTTPClient.h>
@@ -53,11 +76,21 @@ void setup()
   //  Serial.println(ssid);
 
   WiFi.begin(ssid, password);
+  u8g2.clearBuffer();
+  u8g2.setFont(u8g2_font_helvB08_tf); // choose a suitable font
+
+  u8g2.setCursor(1, 15);
+  u8g2.print("Connecting to ");
+  u8g2.setCursor(1, 25);
+  u8g2.print(ssid);
+  u8g2.setCursor(1, 35);
 
   while (WiFi.status() != WL_CONNECTED)
   {
     delay(500);
     //    Serial.print(".");
+    u8g2.print(".");
+    u8g2.sendBuffer();
   }
 
   timeClient.begin();
@@ -80,6 +113,8 @@ void loop()
     client.setFingerprint(fingerprint);
     HTTPClient http;  //Object of class HTTPClient
 
+    delay(200);
+
     // Get NTP Time and print to Serial monitor
     timeClient.update();
     Serial.println();
@@ -87,17 +122,13 @@ void loop()
     Serial.println(timeClient.getFormattedTime());
 
     // Display Time on OLED
-    u8g2.firstPage();
-    do {
-      u8g2.firstPage();
-      u8g2.setFont(u8g2_font_helvB18_tf);
-      u8g2.setCursor(23, 40);
-      u8g2.print(timeClient.getFormattedTime());
-    } while ( u8g2.nextPage() );
+    u8g2.clearBuffer();
+    u8g2.setFont(u8g2_font_helvB18_tf);
+    u8g2.setCursor(23, 40);
+    u8g2.print(timeClient.getFormattedTime());
+    u8g2.sendBuffer();
 
     delay (3000);
-
-
     payload = "{}";
 
     // Send Coingecko query URL
@@ -154,7 +185,7 @@ void loop()
       double bitcoin_gbp = bitcoin["gbp"]; // 39068
       double bitcoin_gbp_24h_change = bitcoin["gbp_24h_change"]; // -3.7228749254037727
       double bitcoin_usd = bitcoin["usd"]; // 54422
-      //     double bitcoin_usd_24h_change = bitcoin["usd_24h_change"]; // -3.778129914824945
+      double bitcoin_usd_24h_change = bitcoin["usd_24h_change"]; // -3.778129914824945
       long bitcoin_last_updated_at = bitcoin["last_updated_at"]; // 1619044823
 
       JsonObject verasity = doc["verasity"];
@@ -184,9 +215,9 @@ void loop()
       // Convert Bitcoin "updated Epoch Time" into readable format
       epoch = epoch + 3600  ; //ADD 1 Hours (For GMT+1)
       // print the hour, minute and second:
-      int hr = (epoch  % 86400L) / 3600;
+      int hr    = (epoch  % 86400L) / 3600;
       int minit = (epoch % 3600) / 60;
-      int sec = (epoch % 60);
+      int sec   = (epoch % 60);
 
       // Send HH:MM:SS time to serial monitor
       Serial.print("Updated  - ");
@@ -207,12 +238,12 @@ void loop()
       Serial.println();
 
       // Edit below your coin holdings
-      double holdings_cardano = 1000.555;
-      double holdings_bitcoin = 2;
-      double holdings_verasity = 2000.5443;
-      double holdings_enjin = 1000.0324;
-      double holdings_ripple = 5000;
-      double holdings_livepeer = 10;
+      double holdings_cardano  =  1000.555;
+      double holdings_bitcoin  =  2;
+      double holdings_verasity =  2000.5443;
+      double holdings_enjin    =  1000.0324;
+      double holdings_ripple   =  5000;
+      double holdings_livepeer =  10;
 
       // Send information from Json payload of your choosing to the serial monitor
       Serial.print("Cardano  - £");
@@ -266,12 +297,12 @@ void loop()
       Serial.print("Holdings - £");
 
       double holdings =
-        (cardano_gbp * holdings_cardano) +
-        (bitcoin_gbp * holdings_bitcoin) +
-        (verasity_gbp * holdings_verasity) +
+        (cardano_gbp   * holdings_cardano) +
+        (bitcoin_gbp   * holdings_bitcoin) +
+        (verasity_gbp  * holdings_verasity) +
         (enjincoin_gbp * holdings_enjin) +
-        (ripple_gbp * holdings_ripple) +
-        (livepeer_gbp * holdings_livepeer);
+        (ripple_gbp    * holdings_ripple) +
+        (livepeer_gbp  * holdings_livepeer);
 
       Serial.println(holdings);
       Serial.println();
@@ -280,14 +311,15 @@ void loop()
       Serial.println();
 
       // Send coin prices to OLED.
-      // Parameters are a. Scrolling string, b. Currency Price, c. Decimal Places, d. Currency Price Change
-      draw("CARDANO - ADA", cardano_gbp, 4, cardano_gbp_24h_change);
-      draw("BITCOIN - BTC", bitcoin_gbp, 2, bitcoin_gbp_24h_change);
-      draw("VERASITY - VRA", verasity_gbp, 4, verasity_gbp_24h_change);
-      draw("ENJIN COIN - ENJ", enjincoin_gbp, 2, enjincoin_gbp_24h_change);
-      draw("RIPPLE - XRP", ripple_gbp, 4, ripple_gbp_24h_change);
-      draw("LIVEPEER - LPT", livepeer_gbp, 2, livepeer_gbp_24h_change);
-      draw("HOLDINGS  ", holdings, 2, 0);
+      // Parameters are a. Scrolling string, b. Currency Price, c. Decimal Places, d. Currency Price Change, e. Currency Symbol
+      draw("CARDANO - ADA",    cardano_gbp,   4,  cardano_gbp_24h_change,   "£");
+      draw("BITCOIN - BTC",    bitcoin_gbp,   2,  bitcoin_gbp_24h_change,   "£");
+      draw("BITCOIN - BTC",    bitcoin_usd,   2,  bitcoin_usd_24h_change,   "$");
+      draw("VERASITY - VRA",   verasity_gbp,  4,  verasity_gbp_24h_change,  "£");
+      draw("ENJIN COIN - ENJ", enjincoin_gbp, 2,  enjincoin_gbp_24h_change, "£");
+      draw("RIPPLE - XRP",     ripple_gbp,    4,  ripple_gbp_24h_change,    "£");
+      draw("LIVEPEER - LPT",   livepeer_gbp,  2,  livepeer_gbp_24h_change,  "£");
+      draw("HOLDINGS  ",       holdings,      2,  0,                        "£");
     }
     http.end();   //Close connection
   }
@@ -335,32 +367,37 @@ void drawScrollString(int16_t offset, const char *s)
   }
 }
 
-void draw(char *s, double coinprice, int prec, double change)
+void draw(char *s, double coinprice, int prec, double change, String currency)
 {
   int16_t offset = -(int16_t)u8g2.getDisplayWidth();
   int16_t len = strlen(s);
+
+  // Calculate for centring of Price
+  char pricelen[10];
+  dtostrf(coinprice, 4, prec, pricelen);
+  int xPos = 64 - (((strlen(pricelen)) * 11) / 2);
+
   for (;;)
   {
-    u8g2.firstPage();
-    do {
-      u8g2.setFont(u8g2_font_helvB18_tf);
-      u8g2.setCursor(10, 30);
-      u8g2.print("£");
-      u8g2.print(coinprice, prec);
+    u8g2.clearBuffer();
+    u8g2.setFont(u8g2_font_helvB18_tf);
+    u8g2.setCursor(xPos - 10, 26);
+    u8g2.print(currency);
+    u8g2.print(coinprice, prec);
 
-      if (change != 0) {
-        u8g2.setFont(u8g2_font_helvB10_tf);
-        u8g2.setCursor(38, 46);
-        if (change > 0) {
-          u8g2.print("+");
-        }
-        u8g2.print(change, 2);
-        u8g2.print("%");
+    if (change != 0) {
+      u8g2.setFont(u8g2_font_helvB10_tf);
+      u8g2.setCursor(38, 42);
+      if (change > 0) {
+        u8g2.print("+");
       }
+      u8g2.print(change, 2);
+      u8g2.print("%");
+    }
 
-      drawScrollString(offset, s);
-    } while ( u8g2.nextPage() );
-    delay(20);
+    drawScrollString(offset, s);
+    u8g2.sendBuffer();
+    delay(10);
     offset += 2;
     if ( offset > len * 8 + 1 )
       break;
