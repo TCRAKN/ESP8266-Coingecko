@@ -11,4 +11,4 @@ No API Key is required for connecting to Coingecko.  There are however request l
 
 You can modify the sketch quite easily to retrieve data from Coinmarketcap.com etc...
 
-I2C 128x64 OLED wired to D1 & D2 of the WeMos/Node MCU boards.  D1 - SCK, D2 - SDA.  Wire OLED Power to 3.3V on ESP board and GND to GND.
+I2C 128x64 OLED wired to D1 & D2 of the WeMos/Node MCU boards.  D1 - SCL, D2 - SDA.  Wire OLED Power to 3.3V on ESP board and GND to GND.
