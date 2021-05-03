@@ -315,9 +315,9 @@ void loop()
       // Send coin prices to OLED.
       // Parameters are a. Scrolling string, b. Currency Price, c. Decimal Places, d. Currency Price Change, e. Currency Symbol
       draw("CARDANO - ADA",    cardano_gbp,   4,  cardano_gbp_24h_change,   "£");
-      draw("BITCOIN - BTC",    bitcoin_gbp,   2,  bitcoin_gbp_24h_change,   "£");
-      draw("BITCOIN - BTC",    bitcoin_usd,   2,  bitcoin_usd_24h_change,   "$");
-      draw("VERASITY - VRA",   verasity_gbp,  4,  verasity_gbp_24h_change,  "£");
+      draw("BITCOIN - BTC",    bitcoin_gbp,   0,  bitcoin_gbp_24h_change,   "£");
+      draw("BITCOIN - BTC",    bitcoin_usd,   0,  bitcoin_usd_24h_change,   "$");
+      draw("VERASITY - VRA",   verasity_gbp,  5,  verasity_gbp_24h_change,  "£");
       draw("ENJIN COIN - ENJ", enjincoin_gbp, 2,  enjincoin_gbp_24h_change, "£");
       draw("RIPPLE - XRP",     ripple_gbp,    4,  ripple_gbp_24h_change,    "£");
       draw("LIVEPEER - LPT",   livepeer_gbp,  2,  livepeer_gbp_24h_change,  "£");
@@ -383,13 +383,13 @@ void draw(char *s, double coinprice, int prec, double change, String currency)
   {
     u8g2.clearBuffer();
     u8g2.setFont(u8g2_font_helvB18_tf);
-    u8g2.setCursor(xPos - 10, 26);
+    u8g2.setCursor(xPos - 11, 26);
     u8g2.print(currency);
     u8g2.print(coinprice, prec);
 
     if (change != 0) {
       u8g2.setFont(u8g2_font_helvB10_tf);
-      u8g2.setCursor(38, 42);
+      u8g2.setCursor(38, 43);
       if (change > 0) {
         u8g2.print("+");
       }
