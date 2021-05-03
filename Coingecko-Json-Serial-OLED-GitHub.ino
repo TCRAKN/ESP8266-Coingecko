@@ -116,7 +116,9 @@ void loop()
     delay(200);
 
     // Get NTP Time and print to Serial monitor
-    timeClient.update();
+    while (!timeClient.update()) {
+      timeClient.forceUpdate();
+    }
     Serial.println();
     Serial.print("Time     - ");
     Serial.println(timeClient.getFormattedTime());
