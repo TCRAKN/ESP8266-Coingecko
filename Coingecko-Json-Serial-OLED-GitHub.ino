@@ -30,6 +30,10 @@
   V2.02
   1. Centre price on OLED
   2. Removed PageBuffers for U8g2 printing
+  
+   V2.03 - 16 Oct 2021
+  1. Updated Coingecko Fingerprint
+
   ------------------------------------------------------------------------------*/
 
 
@@ -56,7 +60,10 @@ NTPClient timeClient(ntpUDP, "0.uk.pool.ntp.org", 3600, 60000);
 
 // SSL SHA-1 Fingerprint may be retrieved from your browser. e.g. for Chrome, Right-click the Padlock inthe address bar, select Certificate.
 // Expand Details, scroll down to Fingerprints, copy the 20-byte SHA-1 key and paste below
-const char *fingerprint  = "89 25 60 5D 50 44 FC C0 85 2B 98 D7 D3 66 52 28 68 4D E6 E2";
+
+// If data retrieval fails, you may need to update the site Fingerprint.
+// Head over to https://www.grc.com/fingerprints.htm and enter api.coingecko.com into the URL entry box and click on "Fingerprint site."
+const char *fingerprint  = "33 C5 7B 69 E6 3B 76 5C 39 3D F1 19 3B 17 68 B8 1B 0A 1F D9";
 
 String payload = "{}";
 
