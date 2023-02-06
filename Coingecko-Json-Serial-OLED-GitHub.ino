@@ -63,7 +63,7 @@ NTPClient timeClient(ntpUDP, "0.uk.pool.ntp.org", 3600, 60000);
 
 // If data retrieval fails, you may need to update the site Fingerprint.
 // Head over to https://www.grc.com/fingerprints.htm and enter api.coingecko.com into the URL entry box and click on "Fingerprint site."
-const char *fingerprint  = "33 C5 7B 69 E6 3B 76 5C 39 3D F1 19 3B 17 68 B8 1B 0A 1F D9";
+const char *fingerprint  = "A1 63 09 9D 7B D6 C1 7F 47 B4 D1 83 0E 7D 36 A9 18 5C 0D 40";
 
 String payload = "{}";
 
