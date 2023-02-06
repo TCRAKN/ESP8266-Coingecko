@@ -61,8 +61,12 @@ NTPClient timeClient(ntpUDP, "0.uk.pool.ntp.org", 3600, 60000);
 // SSL SHA-1 Fingerprint may be retrieved from your browser. e.g. for Chrome, Right-click the Padlock inthe address bar, select Certificate.
 // Expand Details, scroll down to Fingerprints, copy the 20-byte SHA-1 key and paste below
 
-// If data retrieval fails, you may need to update the site Fingerprint.
-// Head over to https://www.grc.com/fingerprints.htm and enter api.coingecko.com into the URL entry box and click on "Fingerprint site."
+// If data retrieval fails (Site response code -1,) you may need to update the site Fingerprint.
+// Don't use www.grc.com.  This site isn't always up-to-date.
+// The best way is to view the SHA1 Fingerprint directly on you browser.  
+// Use the above URL on line 59 in your browser.
+// Once you have the retrieved JSON displayed, use your browser's security tab to view the SHA1 fingerprint.
+// Copy and paste below.
 const char *fingerprint  = "A1 63 09 9D 7B D6 C1 7F 47 B4 D1 83 0E 7D 36 A9 18 5C 0D 40";
 
 String payload = "{}";
