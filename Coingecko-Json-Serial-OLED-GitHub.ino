@@ -33,6 +33,9 @@
   
    V2.03 - 16 Oct 2021
   1. Updated Coingecko Fingerprint
+  
+   V2.04 - 30 Apr 2023
+  1. Updated Coingecko Fingerprint
 
   ------------------------------------------------------------------------------*/
 
@@ -64,10 +67,10 @@ NTPClient timeClient(ntpUDP, "0.uk.pool.ntp.org", 3600, 60000);
 // If data retrieval fails (Site response code -1,) you may need to update the site Fingerprint.
 // Don't use www.grc.com.  This site isn't always up-to-date.
 // The best way is to view the SHA1 Fingerprint directly on you browser.  
-// Use the above URL on line 59 in your browser.
+// Use the above URL on line 62 in your browser.
 // Once you have the retrieved JSON displayed, use your browser's security tab to view the SHA1 fingerprint.
 // Copy and paste below.
-const char *fingerprint  = "A1 63 09 9D 7B D6 C1 7F 47 B4 D1 83 0E 7D 36 A9 18 5C 0D 40";
+const char *fingerprint  = "9B 26 12 01 BD 91 D1 7E 59 6C 39 7E F2 72 06 C2 BD F6 C3 FF";
 
 String payload = "{}";
 
