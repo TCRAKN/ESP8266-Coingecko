@@ -70,7 +70,7 @@ NTPClient timeClient(ntpUDP, "0.uk.pool.ntp.org", 3600, 60000);
 // Use the above URL on line 62 in your browser.
 // Once you have the retrieved JSON displayed, use your browser's security tab to view the SHA1 fingerprint.
 // Copy and paste below.
-const char *fingerprint  = "9B 26 12 01 BD 91 D1 7E 59 6C 39 7E F2 72 06 C2 BD F6 C3 FF";
+const char *fingerprint  = "E8 60 38 66 AD 34 C8 A7 A5 3E 32 4D 73 C1 6E 00 51 05 D4 76";
 
 String payload = "{}";
 
