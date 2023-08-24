@@ -37,6 +37,8 @@
    V2.04 - 30 Apr 2023
   1. Updated Coingecko Fingerprint
 
+   V2.05 - 24 Aug 2023
+  1. Updated Coingecko Fingerprint
   ------------------------------------------------------------------------------*/
 
 
@@ -70,7 +72,7 @@ NTPClient timeClient(ntpUDP, "0.uk.pool.ntp.org", 3600, 60000);
 // Use the above URL on line 62 in your browser.
 // Once you have the retrieved JSON displayed, use your browser's security tab to view the SHA1 fingerprint.
 // Copy and paste below.
-const char *fingerprint  = "E8 60 38 66 AD 34 C8 A7 A5 3E 32 4D 73 C1 6E 00 51 05 D4 76";
+const char *fingerprint  = "0F 5E D5 EA 64 AE 5D A4 B3 CE A3 16 DC 90 12 02 56 3B 90 B9";
 
 String payload = "{}";
 
