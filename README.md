@@ -18,12 +18,11 @@ Please make sure you have installed the latest Arduino IDE, Libraries and Boards
 You'll need these libraries:
 ESP8266WiFi.h
 ESP8266HTTPClient.h
-ArduinoJson.h
+ArduinoJson.h - V7
 NTPClient.h
 WiFiUdp.h
 Wire.h
 U8g2lib.h
 
-Make sure the Fingerprint is up-to-date.
-SSL SHA-1 Fingerprint may be retrieved from your browser. e.g. for Chrome, Right-click the Padlock inthe address bar, select Certificate.
-Expand Details, scroll down to Fingerprints, copy the 20-byte SHA-1 key and paste.
+Please consider contributing to Benoît's efforts by buying his invaluable book - Mastering ArduinoJson 7 at
+https://arduinojson.org/book/
