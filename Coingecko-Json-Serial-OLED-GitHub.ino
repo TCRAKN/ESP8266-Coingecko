@@ -8,6 +8,8 @@
   Description:
   Code demonstrating parsing json data from Coingecko.com API to fetch
   the current price of various crypto coins.
+
+  Make sure all libraries are up-to-date.  Use ArduinoJson V7
   ------------------------------------------------------------------------------
   Change log:
 
@@ -39,6 +41,10 @@
 
    V2.05 - 24 Aug 2023
   1. Updated Coingecko Fingerprint
+
+    3.00 - 21 Nov 2024
+  1. Disable SSL certificate validation, negating the need to use SSL Fingerprint.
+  2. Incorporating ArduinoJSON v7, so no requirement to allocate space for JsonDocument []
   ------------------------------------------------------------------------------*/
 
 
@@ -72,7 +78,7 @@ NTPClient timeClient(ntpUDP, "0.uk.pool.ntp.org", 3600, 60000);
 // Use the above URL on line 62 in your browser.
 // Once you have the retrieved JSON displayed, use your browser's security tab to view the SHA1 fingerprint.
 // Copy and paste below.
-const char *fingerprint  = "0F 5E D5 EA 64 AE 5D A4 B3 CE A3 16 DC 90 12 02 56 3B 90 B9";
+//const char *fingerprint  = "0F 5E D5 EA 64 AE 5D A4 B3 CE A3 16 DC 90 12 02 56 3B 90 B9";
 
 String payload = "{}";
 
@@ -126,7 +132,8 @@ void loop()
   {
     // Instanciate Secure HTTP communication
     WiFiClientSecure client;
-    client.setFingerprint(fingerprint);
+    client.setInsecure();
+   // client.setFingerprint(fingerprint);
     HTTPClient http;  //Object of class HTTPClient
 
     delay(200);
@@ -151,6 +158,7 @@ void loop()
 
     // Send Coingecko query URL
     http.begin(client, CG_URL);
+    http.useHTTP10(true);
 
     //    Serial.println();
     //    Serial.print("Coingecko URL - ");
@@ -172,8 +180,9 @@ void loop()
 
       // If you add or remove any parameters from the URL query, head over to the ArduinoJson Assistant to determine the size of the buffer.
       // https://arduinojson.org/v6/assistant/
-      // Ensure V6 of the ArduinoJson library is installled.
-      StaticJsonDocument<800> doc;
+      // Ensure V7 of the ArduinoJson library is installled.
+      //StaticJsonDocument<800> doc;
+      JsonDocument doc;
 
       DeserializationError error = deserializeJson(doc, payload);
       if (error) {
